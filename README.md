@@ -8,6 +8,8 @@ git clone https://github.com/felikarina/slider.git
 ```
 ### Lancer le fichier slider.html dans un navigateur.
 
+![](game.gif)
+
 Slider est une reproduction d'un jeu de logique du site Goobix. Le but est de marquer des points en alignant des boules de même couleur.
 
 ## Règles du jeu
