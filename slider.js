@@ -116,7 +116,7 @@ function changeSrc() {
 }
 
 function following(boxID) {
-    let follow = parseInt(boxID)+1
+    let follow = boxID+1
     follow = follow.toString()
     let result = document.getElementById(follow)
     if (result == null) {
@@ -126,17 +126,33 @@ function following(boxID) {
 }
 
 function checkLine(boxID,boxSRC) {
+    boxID = parseInt(boxID)
+    let nope = checkRight(boxID,boxSRC)
+    if (nope == 0) {
+        disappear(boxID)
+    }
+    boxID = boxID-1
+    nope = checkRight(boxID,boxSRC)
+    if (nope == 0) {
+        disappear(boxID)
+    }
+    boxID = boxID-2
+    nope = checkRight(boxID,boxSRC)
+    if (nope == 0) {
+        disappear(boxID)
+    }
+}
+
+function checkRight(boxID,boxSRC) {
     let nope = 0
     let nextBox = following(boxID)
     for (m=0; m<4; m++) {
         if (boxSRC !== nextBox.src){
             nope++
         }
-    nextBox = following(nextBox.id)
+    nextBox = following(parseInt(nextBox.id))
     }
-    if (nope == 0) {
-        disappear(boxID)
-    }
+    return nope
 }
 
 function disappear(boxID) {
@@ -146,7 +162,7 @@ function disappear(boxID) {
     for (n=0; n<4; n++) {
         push = newGrid.push(nextID.id)
         nextID.src = "picture/box.gif"
-        nextID = following(nextID.id)
+        nextID = following(parseInt(nextID.id))
     }
 }
 
