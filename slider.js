@@ -33,6 +33,9 @@ function handleTdClick(event) {
         boxremoved = target.querySelector("img").id
         newGrid = newGrid.filter((number) => number !== boxremoved)
         push = newGrid.push(firstBoxClicked)
+        let targetID = target.querySelector("img").id
+        let targetSRC = target.querySelector("img").src
+        checkLine(targetID,targetSRC)
         addThreeBalls()
     }
 }
@@ -89,16 +92,20 @@ function addThreeBallsWithClick() {
         for (let j=0; j<3; j++){
             let box = document.getElementById(threeBalls[j])
             box.src = getRandomColour()
+            checkLine(box.id,box.src)
         }    
-        checkLine()
     })
 }
 
 function addThreeBalls() {
     clearTdClick()
     threeBalls = getThreeBallsRandom()
+    for (let j=0; j<3; j++){
+        let box = document.getElementById(threeBalls[j])
+        box.src = getRandomColour()
+        checkLine(box.id,box.src)
+    }
     changeSrc()
-    checkLine()
 }
 
 function changeSrc() {
@@ -108,29 +115,63 @@ function changeSrc() {
     }
 }
 
-function checkLine() {
-    for (let l=0; l<tabLine.length; l++) {
-        let images = tabLine[l].querySelectorAll("img")
-        let img = Array.from(images) //convert nodelist in array for slice
-        let sources = Array.from(img).map(img => img.src)
-        for (let i = 0; i < sources.length - 4; i++) {
-            let currentSource = sources[i]
-            if (sources.slice(i, i + 5).every(src => src === currentSource) && currentSource !== "http://127.0.0.1:5500/picture/box.gif" ) {
-                console.log("yes")
-                let elementsToUpdate = img.slice(i, i + 5)
-                updateImageSources(elementsToUpdate)
-            }
+function following(boxID) {
+    let follow = parseInt(boxID)+1
+    follow = follow.toString()
+    let result = document.getElementById(follow)
+    if (result == null) {
+        result = NaN
+    }
+    return result
+}
+
+function checkLine(boxID,boxSRC) {
+    let nope = 0
+    let nextBox = following(boxID)
+    for (m=0; m<4; m++) {
+        if (boxSRC !== nextBox.src){
+            nope++
         }
+    nextBox = following(nextBox.id)
+    }
+    if (nope == 0) {
+        disappear(boxID)
     }
 }
 
-function updateImageSources(elementsToUpdate){
-    elementsToUpdate.forEach(element => {
-        element.src = "picture/box.gif"
-        push = newGrid.push(element.id)
-        console.log(newGrid)
-    })
+function disappear(boxID) {
+    let nextID = following(boxID)
+    document.getElementById(boxID).src = "picture/box.gif"
+    push = newGrid.push(boxID)
+    for (n=0; n<4; n++) {
+        push = newGrid.push(nextID.id)
+        nextID.src = "picture/box.gif"
+        nextID = following(nextID.id)
+    }
 }
+
+// function checkLine1() {
+//     for (let l=0; l<tabLine.length; l++) {
+//         let images = tabLine[l].querySelectorAll("img")
+//         let img = Array.from(images) //convert nodelist in array for slice
+//         let sources = Array.from(img).map(img => img.src)
+//         for (let i = 0; i < sources.length - 4; i++) {
+//             let currentSource = sources[i]
+//             if (sources.slice(i, i + 5).every(src => src === currentSource) && currentSource !== "http://127.0.0.1:5500/picture/box.gif" ) {
+//                 console.log("yes")
+//                 let elementsToUpdate = img.slice(i, i + 5)
+//                 updateImageSources(elementsToUpdate)
+//             }
+//         }
+//     }
+// }
+// function updateImageSources(elementsToUpdate){
+//     elementsToUpdate.forEach(element => {
+//         element.src = "picture/box.gif"
+//         push = newGrid.push(element.id)
+//         console.log(newGrid)
+//     })
+// }
 
 function reset() {
     resetButton.addEventListener("click", () => {
