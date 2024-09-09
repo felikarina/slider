@@ -2,21 +2,13 @@ let startButton = document.getElementById("start")
 let resetButton = document.getElementById("reset")
 let gameGrid = document.getElementById("gamegrid")
 const emptyGrid = gameGrid.innerHTML
-let Grid = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81"]
+const Grid = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81"]
 let newGrid = [].concat(Grid)
-let line1 = document.getElementById("line1")
-let line2 = document.getElementById("line2")
-let line3 = document.getElementById("line3")
-let line4 = document.getElementById("line4")
-let line5 = document.getElementById("line5")
-let line6 = document.getElementById("line6")
-let line7 = document.getElementById("line7")
-let line8 = document.getElementById("line8")
-let line9 = document.getElementById("line9")
-let tabLine = [line1,line2,line3,line4,line5,line6,line7,line8,line9]
 let firstClick = false
 let firstBoxClicked = "0"
 let changeColour = "picture/joker.png"
+const borderTable = ["6","7","8","9","15","16","17","18","24","25","26","27","33","34","35","36","42","43","44","45","51","52","53","54","60","61","62","64","70","71","72","73"]
+
 
 function handleTdClick(event) {
     const target = event.target.closest("td")
@@ -92,8 +84,6 @@ function addThreeBallsWithClick() {
         threeBalls = getThreeBallsRandom()
         for (let j=0; j<3; j++){
             let box = document.getElementById(threeBalls[j])
-            console.log(newGrid)
-            console.log(box.src)
             box.src = getRandomColour()
             checkLine(box)
         }    
@@ -128,6 +118,26 @@ function following(box) {
     return result
 }
 
+function followingUp(box) {
+    let follow = parseInt(box.id)+9
+    follow = follow.toString()
+    let result = document.getElementById(follow)
+    if (result == null) {
+        result = "x"
+    }
+    return result
+}
+
+function boxBeforeUp(box) {
+    let follow = parseInt(box.id)-9
+    follow = follow.toString()
+    let result = document.getElementById(follow)
+    if (result == null) {
+        result = "x"
+    }
+    return result
+}
+
 function boxBefore(box) {
     let follow = parseInt(box.id)-1
     follow = follow.toString()
@@ -139,35 +149,42 @@ function boxBefore(box) {
 }
 
 function checkLine(box) {
+    let firstbox = box
     let nope = checkRight(box)
-    if (nope == 0) {
-        console.log("yep")
+    if (nope == 0  && !borderTable.find((element) => element == box.id)) {
         disappear(box)
     }
-    let newbox = boxBefore(box)
-    nope = checkRight(newbox)
-    if (nope == 0 && newbox !== "x") {
-        console.log("yip")
-        disappear(newbox)
+    for (p=0; p<4; p++) {
+        box = boxBefore(box)
+        nope = checkRight(box)
+        if (nope == 0 && box !== "x" && !borderTable.find((element) => element == box.id)) {
+            disappear(box)
+        }
     }
-    let newbox2 = boxBefore(newbox)
-    nope = checkRight(newbox2)
-    if (nope == 0 && newbox2 !== "x") {
-        console.log("middle")
-        disappear(newbox2)
+    nope = checkUp(firstbox)
+    if (nope == 0) {
+        console.log("up")
+        disappearUp(firstbox)
     }
-    let newbox3 = boxBefore(newbox2)
-    nope = checkRight(newbox3)
-    if (nope == 0 && newbox3 !== "x") {
-        console.log("liend")
-        disappear(newbox3)
+    for (q=0; q<4; q++) {
+        firstbox = boxBeforeUp(firstbox)
+        nope = checkUp(firstbox)
+        if (nope == 0 && firstbox !== "x") {
+            disappearUp(firstbox)
+        }
     }
-    let newbox4 = boxBefore(newbox3)
-    nope = checkRight(newbox4)
-    if (nope == 0 && newbox4 !== "x") {
-        console.log("end")
-        disappear(newbox4)
+}
+
+function checkUp(box) {
+    let nope = 0
+    let nextBox = followingUp(box)
+    for (m=0; m<4; m++) {
+        if (box.src !== nextBox.src){
+            nope++
+        }
+    nextBox = followingUp(nextBox)
     }
+    return nope
 }
 
 function checkRight(box) {
@@ -180,6 +197,17 @@ function checkRight(box) {
     nextBox = following(nextBox)
     }
     return nope
+}
+
+function disappearUp(box) {
+    let nextID = followingUp(box)
+    box.src = "picture/box.gif"
+    push = newGrid.push(box.id)
+    for (n=0; n<4; n++) {
+        push = newGrid.push(nextID.id)
+        nextID.src = "picture/box.gif"
+        nextID = followingUp(nextID)
+    }
 }
 
 function disappear(box) {
