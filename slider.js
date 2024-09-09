@@ -33,9 +33,8 @@ function handleTdClick(event) {
         boxremoved = target.querySelector("img").id
         newGrid = newGrid.filter((number) => number !== boxremoved)
         push = newGrid.push(firstBoxClicked)
-        let targetID = target.querySelector("img").id
-        let targetSRC = target.querySelector("img").src
-        checkLine(targetID,targetSRC)
+        let targetBox = target.querySelector("img")
+        checkLine(targetBox)
         addThreeBalls()
     }
 }
@@ -81,8 +80,10 @@ function getThreeBallsRandom() {
 }
 
 function getRandomColour() {
-    let colours = ["picture/joker.png","picture/blue.png","picture/darkRed.png","picture/green.png","picture/purple.png","picture/red.png","picture/yellow.png"]
-    return colours[getRandomInt(0,7)]
+    //let colours = ["picture/joker.png","picture/blue.png","picture/darkRed.png","picture/green.png","picture/purple.png","picture/red.png","picture/yellow.png"]
+    let colours = ["picture/blue.png","picture/red.png","picture/green.png"]
+    return colours[getRandomInt(0,2)]
+    //return colours[getRandomInt(0,7)]
 }
 
 function addThreeBallsWithClick() {
@@ -91,8 +92,10 @@ function addThreeBallsWithClick() {
         threeBalls = getThreeBallsRandom()
         for (let j=0; j<3; j++){
             let box = document.getElementById(threeBalls[j])
+            console.log(newGrid)
+            console.log(box.src)
             box.src = getRandomColour()
-            checkLine(box.id,box.src)
+            checkLine(box)
         }    
     })
 }
@@ -103,7 +106,7 @@ function addThreeBalls() {
     for (let j=0; j<3; j++){
         let box = document.getElementById(threeBalls[j])
         box.src = getRandomColour()
-        checkLine(box.id,box.src)
+        checkLine(box)
     }
     changeSrc()
 }
@@ -115,54 +118,78 @@ function changeSrc() {
     }
 }
 
-function following(boxID) {
-    let follow = boxID+1
+function following(box) {
+    let follow = parseInt(box.id)+1
     follow = follow.toString()
     let result = document.getElementById(follow)
     if (result == null) {
-        result = NaN
+        result = "x"
     }
     return result
 }
 
-function checkLine(boxID,boxSRC) {
-    boxID = parseInt(boxID)
-    let nope = checkRight(boxID,boxSRC)
-    if (nope == 0) {
-        disappear(boxID)
+function boxBefore(box) {
+    let follow = parseInt(box.id)-1
+    follow = follow.toString()
+    let result = document.getElementById(follow)
+    if (result == null) {
+        result = "x"
     }
-    boxID = boxID-1
-    nope = checkRight(boxID,boxSRC)
+    return result
+}
+
+function checkLine(box) {
+    let nope = checkRight(box)
     if (nope == 0) {
-        disappear(boxID)
+        console.log("yep")
+        disappear(box)
     }
-    boxID = boxID-2
-    nope = checkRight(boxID,boxSRC)
-    if (nope == 0) {
-        disappear(boxID)
+    let newbox = boxBefore(box)
+    nope = checkRight(newbox)
+    if (nope == 0 && newbox !== "x") {
+        console.log("yip")
+        disappear(newbox)
+    }
+    let newbox2 = boxBefore(newbox)
+    nope = checkRight(newbox2)
+    if (nope == 0 && newbox2 !== "x") {
+        console.log("middle")
+        disappear(newbox2)
+    }
+    let newbox3 = boxBefore(newbox2)
+    nope = checkRight(newbox3)
+    if (nope == 0 && newbox3 !== "x") {
+        console.log("liend")
+        disappear(newbox3)
+    }
+    let newbox4 = boxBefore(newbox3)
+    nope = checkRight(newbox4)
+    if (nope == 0 && newbox4 !== "x") {
+        console.log("end")
+        disappear(newbox4)
     }
 }
 
-function checkRight(boxID,boxSRC) {
+function checkRight(box) {
     let nope = 0
-    let nextBox = following(boxID)
+    let nextBox = following(box)
     for (m=0; m<4; m++) {
-        if (boxSRC !== nextBox.src){
+        if (box.src !== nextBox.src){
             nope++
         }
-    nextBox = following(parseInt(nextBox.id))
+    nextBox = following(nextBox)
     }
     return nope
 }
 
-function disappear(boxID) {
-    let nextID = following(boxID)
-    document.getElementById(boxID).src = "picture/box.gif"
-    push = newGrid.push(boxID)
+function disappear(box) {
+    let nextID = following(box)
+    box.src = "picture/box.gif"
+    push = newGrid.push(box.id)
     for (n=0; n<4; n++) {
         push = newGrid.push(nextID.id)
         nextID.src = "picture/box.gif"
-        nextID = following(parseInt(nextID.id))
+        nextID = following(nextID)
     }
 }
 
