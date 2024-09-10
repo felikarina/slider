@@ -2,6 +2,8 @@ let startButton = document.getElementById("start")
 let resetButton = document.getElementById("reset")
 let gameGrid = document.getElementById("gamegrid")
 let numberBalls = document.getElementById("numberBalls")
+let score = document.getElementById("score")
+let numberScore = 0
 const emptyGrid = gameGrid.innerHTML
 const Grid = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81"]
 let newGrid = [].concat(Grid)
@@ -29,7 +31,6 @@ function handleTdClick(event) {
         let targetBox = target.querySelector("img")
         checkLine(targetBox)
         addThreeBalls()
-        console.log(newGrid)
     }
 }
 
@@ -157,6 +158,7 @@ function checkLine(box) {
     let nope = checkRight(box)
     if (nope == 0  && !borderTable.find((element) => element == box.id)) {
         disappear(box)
+        scoreInput()
     }
     for (p=0; p<4; p++) {
         box = boxBefore(box)
@@ -228,13 +230,21 @@ function reset() {
     resetButton.addEventListener("click", () => {
         gameGrid.innerHTML = emptyGrid
         newGrid = [].concat(Grid)
-        addTdClickHandlers();
+        addTdClickHandlers()
+        numberScore = 0
+        score.value = "score : " + numberScore
+        numberOfBalls(81)
     })
 }
 
 function numberOfBalls(number) {
     number = 81-number
     return numberBalls.value = "number of balls : " + number
+}
+
+function scoreInput() {
+    numberScore = numberScore+10
+    return score.value = "score : " + numberScore
 }
 
 addTdClickHandlers()
