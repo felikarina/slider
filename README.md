@@ -26,11 +26,11 @@ Slider est une reproduction d'un jeu de logique du site Goobix. Le but est de ma
 - Boutons Start et Reset ✔️
 - Apparition de trois boules de manière aléatoire ✔️
 - Déplacement d'une boule ✔️
-- Disparition d'une succession de 5 boules de même couleur horizontalement ✔️
+- Disparition d'une succession de 5 boules de même couleur horizontalement et verticalement ✔️
+- Afficher le nombre de boules présentes en temps réel ✔️
 
 ### Fonctionnalités à implémenter
-- Prendre en compte les alignements verticaux et obliques
-- Afficher le nombre de boules présentes en temps réel
+- Prendre en compte les alignements obliques
 - Afficher le score (10 points par alignement réussi)
 - Rendre le déplacement possible uniquement lorsqu'un chemin est disponible
 - Gérer les boules "joker"
