@@ -1,6 +1,7 @@
 let startButton = document.getElementById("start")
 let resetButton = document.getElementById("reset")
 let gameGrid = document.getElementById("gamegrid")
+let numberBalls = document.getElementById("numberBalls")
 const emptyGrid = gameGrid.innerHTML
 const Grid = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81"]
 let newGrid = [].concat(Grid)
@@ -28,6 +29,7 @@ function handleTdClick(event) {
         let targetBox = target.querySelector("img")
         checkLine(targetBox)
         addThreeBalls()
+        console.log(newGrid)
     }
 }
 
@@ -72,10 +74,10 @@ function getThreeBallsRandom() {
 }
 
 function getRandomColour() {
-    //let colours = ["picture/joker.png","picture/blue.png","picture/darkRed.png","picture/green.png","picture/purple.png","picture/red.png","picture/yellow.png"]
-    let colours = ["picture/blue.png","picture/red.png","picture/green.png"]
-    return colours[getRandomInt(0,2)]
-    //return colours[getRandomInt(0,7)]
+    let colours = ["picture/blue.png","picture/darkRed.png","picture/green.png","picture/purple.png","picture/red.png","picture/yellow.png"]
+    return colours[getRandomInt(0,6)]
+    // let colours = ["picture/blue.png","picture/red.png","picture/green.png"]
+    // return colours[getRandomInt(0,2)]
 }
 
 function addThreeBallsWithClick() {
@@ -86,7 +88,8 @@ function addThreeBallsWithClick() {
             let box = document.getElementById(threeBalls[j])
             box.src = getRandomColour()
             checkLine(box)
-        }    
+        } 
+        numberOfBalls(newGrid.length)   
     })
 }
 
@@ -99,6 +102,7 @@ function addThreeBalls() {
         checkLine(box)
     }
     changeSrc()
+    numberOfBalls(newGrid.length)
 }
 
 function changeSrc() {
@@ -163,7 +167,6 @@ function checkLine(box) {
     }
     nope = checkUp(firstbox)
     if (nope == 0) {
-        console.log("up")
         disappearUp(firstbox)
     }
     for (q=0; q<4; q++) {
@@ -221,35 +224,17 @@ function disappear(box) {
     }
 }
 
-// function checkLine1() {
-//     for (let l=0; l<tabLine.length; l++) {
-//         let images = tabLine[l].querySelectorAll("img")
-//         let img = Array.from(images) //convert nodelist in array for slice
-//         let sources = Array.from(img).map(img => img.src)
-//         for (let i = 0; i < sources.length - 4; i++) {
-//             let currentSource = sources[i]
-//             if (sources.slice(i, i + 5).every(src => src === currentSource) && currentSource !== "http://127.0.0.1:5500/picture/box.gif" ) {
-//                 console.log("yes")
-//                 let elementsToUpdate = img.slice(i, i + 5)
-//                 updateImageSources(elementsToUpdate)
-//             }
-//         }
-//     }
-// }
-// function updateImageSources(elementsToUpdate){
-//     elementsToUpdate.forEach(element => {
-//         element.src = "picture/box.gif"
-//         push = newGrid.push(element.id)
-//         console.log(newGrid)
-//     })
-// }
-
 function reset() {
     resetButton.addEventListener("click", () => {
         gameGrid.innerHTML = emptyGrid
         newGrid = [].concat(Grid)
         addTdClickHandlers();
     })
+}
+
+function numberOfBalls(number) {
+    number = 81-number
+    return numberBalls.value = "number of balls : " + number
 }
 
 addTdClickHandlers()
