@@ -7,10 +7,11 @@ let numberScore = 0
 const emptyGrid = gameGrid.innerHTML
 const Grid = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81"]
 let newGrid = [].concat(Grid)
+let CountGrid = [].concat(Grid)
 let firstClick = false
 let firstBoxClicked = "0"
 let changeColour = "picture/joker.png"
-const borderTable = ["6","7","8","9","15","16","17","18","24","25","26","27","33","34","35","36","42","43","44","45","51","52","53","54","60","61","62","64","70","71","72","73"]
+const borderTable = ["6","7","8","9","15","16","17","18","24","25","26","27","33","34","35","36","42","43","44","45","51","52","53","54","60","61","62","63","69","70","71","72"]
 
 
 function handleTdClick(event) {
@@ -75,10 +76,10 @@ function getThreeBallsRandom() {
 }
 
 function getRandomColour() {
-    let colours = ["picture/blue.png","picture/darkRed.png","picture/green.png","picture/purple.png","picture/red.png","picture/yellow.png"]
-    return colours[getRandomInt(0,6)]
-    // let colours = ["picture/blue.png","picture/red.png","picture/green.png"]
-    // return colours[getRandomInt(0,2)]
+    // let colours = ["picture/blue.png","picture/darkRed.png","picture/green.png","picture/purple.png","picture/red.png","picture/yellow.png"]
+    // return colours[getRandomInt(0,6)]
+    let colours = ["picture/blue.png","picture/red.png","picture/green.png"]
+    return colours[getRandomInt(0,2)]
 }
 
 function addThreeBallsWithClick() {
@@ -90,7 +91,7 @@ function addThreeBallsWithClick() {
             box.src = getRandomColour()
             checkLine(box)
         } 
-        numberOfBalls(newGrid.length)   
+    numberOfBalls()
     })
 }
 
@@ -103,7 +104,7 @@ function addThreeBalls() {
         checkLine(box)
     }
     changeSrc()
-    numberOfBalls(newGrid.length)
+    numberOfBalls()
 }
 
 function changeSrc() {
@@ -158,13 +159,13 @@ function checkLine(box) {
     let nope = checkRight(box)
     if (nope == 0  && !borderTable.find((element) => element == box.id)) {
         disappear(box)
-        scoreInput()
     }
     for (p=0; p<4; p++) {
         box = boxBefore(box)
         nope = checkRight(box)
         if (nope == 0 && box !== "x" && !borderTable.find((element) => element == box.id)) {
             disappear(box)
+            break
         }
     }
     nope = checkUp(firstbox)
@@ -174,8 +175,9 @@ function checkLine(box) {
     for (q=0; q<4; q++) {
         firstbox = boxBeforeUp(firstbox)
         nope = checkUp(firstbox)
-        if (nope == 0 && firstbox !== "x") {
+        if (nope == 0 && firstbox !== "x" && firstbox.src !== "picture/box.gif") {
             disappearUp(firstbox)
+            break
         }
     }
 }
@@ -233,13 +235,19 @@ function reset() {
         addTdClickHandlers()
         numberScore = 0
         score.value = "score : " + numberScore
-        numberOfBalls(81)
+        numberOfBalls()
     })
 }
 
-function numberOfBalls(number) {
-    number = 81-number
-    return numberBalls.value = "number of balls : " + number
+function numberOfBalls() {
+    let result = 0
+    console.log(document.getElementById(CountGrid[0]).src)
+    for (r=0; r<81; r++) {
+        if (document.getElementById(CountGrid[r]).src !== "http://127.0.0.1:5500/picture/box.gif") {
+            result ++
+        }
+    }
+    return numberBalls.value = "number of balls : "+result
 }
 
 function scoreInput() {
