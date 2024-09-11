@@ -28,11 +28,14 @@ function handleTdClick(event) {
         firstClick = false
         boxremoved = target.querySelector("img").id
         newGrid = newGrid.filter((number) => number !== boxremoved)
-        push = newGrid.push(firstBoxClicked)
+        if (!newGrid.includes(firstBoxClicked)) {
+            newGrid.push(firstBoxClicked)
+        }
         let targetBox = target.querySelector("img")
         checkLine(targetBox)
         addThreeBalls()
     }
+    console.log(newGrid)
 }
 
 function addTdClickHandlers() {
@@ -79,7 +82,7 @@ function getRandomColour() {
     // let colours = ["picture/blue.png","picture/darkRed.png","picture/green.png","picture/purple.png","picture/red.png","picture/yellow.png"]
     // return colours[getRandomInt(0,6)]
     let colours = ["picture/blue.png","picture/red.png","picture/green.png"]
-    return colours[getRandomInt(0,2)]
+    return colours[getRandomInt(0,3)]
 }
 
 function addThreeBallsWithClick() {
@@ -163,8 +166,9 @@ function checkLine(box) {
     for (p=0; p<4; p++) {
         box = boxBefore(box)
         nope = checkRight(box)
-        if (nope == 0 && box !== "x" && !borderTable.find((element) => element == box.id)) {
+        if (nope == 0 && box !== "x" && firstbox.src !== "picture/box.gif" && !borderTable.find((element) => element == box.id)) {
             disappear(box)
+            scoreInput()
             break
         }
     }
@@ -177,6 +181,7 @@ function checkLine(box) {
         nope = checkUp(firstbox)
         if (nope == 0 && firstbox !== "x" && firstbox.src !== "picture/box.gif") {
             disappearUp(firstbox)
+            scoreInput()
             break
         }
     }
@@ -209,9 +214,13 @@ function checkRight(box) {
 function disappearUp(box) {
     let nextID = followingUp(box)
     box.src = "picture/box.gif"
-    push = newGrid.push(box.id)
+    if (!newGrid.includes(box.id)) {
+        newGrid.push(box.id)
+    }
     for (n=0; n<4; n++) {
-        push = newGrid.push(nextID.id)
+        if (!newGrid.includes(nextID.id)) {
+            newGrid.push(nextID.id)
+        }
         nextID.src = "picture/box.gif"
         nextID = followingUp(nextID)
     }
@@ -220,9 +229,13 @@ function disappearUp(box) {
 function disappear(box) {
     let nextID = following(box)
     box.src = "picture/box.gif"
-    push = newGrid.push(box.id)
+    if (!newGrid.includes(box.id)) {
+        newGrid.push(box.id)
+    }
     for (n=0; n<4; n++) {
-        push = newGrid.push(nextID.id)
+        if (!newGrid.includes(nextID.id)) {
+            newGrid.push(nextID.id)
+        }
         nextID.src = "picture/box.gif"
         nextID = following(nextID)
     }
@@ -241,17 +254,16 @@ function reset() {
 
 function numberOfBalls() {
     let result = 0
-    console.log(document.getElementById(CountGrid[0]).src)
     for (r=0; r<81; r++) {
         if (document.getElementById(CountGrid[r]).src !== "http://127.0.0.1:5500/picture/box.gif") {
             result ++
         }
     }
-    return numberBalls.value = "number of balls : "+result
+    return numberBalls.value = "number of balls : " + result
 }
 
 function scoreInput() {
-    numberScore = numberScore+10
+    numberScore += 10
     return score.value = "score : " + numberScore
 }
 
