@@ -35,7 +35,6 @@ function handleTdClick(event) {
         checkLine(targetBox)
         addThreeBalls()
     }
-    console.log(newGrid)
 }
 
 function addTdClickHandlers() {
@@ -73,7 +72,7 @@ function getRandomForGrid() {
 function getThreeBallsRandom() {
     result = []
     for (let i=0; i<3; i++) {
-        push = result.push(getRandomForGrid())
+        result.push(getRandomForGrid())
     }
     return result
 }
@@ -88,33 +87,27 @@ function getRandomColour() {
 function addThreeBallsWithClick() {
     startButton.addEventListener("click", () => {
         clearTdClick()
-        threeBalls = getThreeBallsRandom()
+        let threeBalls = getThreeBallsRandom()
         for (let j=0; j<3; j++){
             let box = document.getElementById(threeBalls[j])
             box.src = getRandomColour()
             checkLine(box)
+            newGrid = newGrid.filter((id) => id !== box.id)
         } 
-    numberOfBalls()
+    numberOfBalls()    
     })
 }
 
 function addThreeBalls() {
     clearTdClick()
-    threeBalls = getThreeBallsRandom()
+    let threeBalls = getThreeBallsRandom()
     for (let j=0; j<3; j++){
         let box = document.getElementById(threeBalls[j])
         box.src = getRandomColour()
         checkLine(box)
+        newGrid = newGrid.filter((id) => id !== box.id)
     }
-    changeSrc()
     numberOfBalls()
-}
-
-function changeSrc() {
-    for (let k=0; k<3; k++) {
-        let box = document.getElementById(threeBalls[k])
-        box.src = getRandomColour()
-    }
 }
 
 function following(box) {
