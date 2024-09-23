@@ -2,7 +2,7 @@ class Cell {
     constructor(id, imgElement) {
         this.id = id
         this.imgElement = imgElement
-        this.color = "picture/box.gif" // Default image (empty box)
+        this.color = "picture/box.gif"
     }
 
     setColor(color) {
@@ -30,8 +30,7 @@ class Game {
         this.gridSize = 81
         this.grid = []
         this.borderTable = ["6", "7", "8", "9", "15", "16", "17", "18", "24", "25", "26", "27", "33", "34", "35", "36", "42", "43", "44", "45", "51", "52", "53", "54", "60", "61", "62", "63", "69", "70", "71", "72"]
-        this.firstClick = false
-        this.firstBoxClicked = null
+        this.selectedCell = null
         this.changeColour = "picture/joker.png"
 
         this.initGrid()
@@ -76,31 +75,33 @@ class Game {
         const img = target.querySelector("img")
         const clickedCell = this.grid.find(cell => cell.id === img.id)
 
-        if (target && !clickedCell.isEmpty()) {
-            document.querySelectorAll("td.selected").forEach(td => td.classList.remove("selected"))
+        if (!clickedCell.isEmpty()) {
+            this.clearSelection()
             target.classList.toggle("selected")
+            this.selectedCell = clickedCell
             this.changeColour = img.src
-            this.firstBoxClicked = clickedCell.id
-            this.firstClick = true
-        }
-
-        if (target && clickedCell.isEmpty() && this.firstClick) {
+        } 
+        else if (this.selectedCell) {
             this.moveBall(clickedCell)
-            this.firstClick = false
-
             this.checkLine(clickedCell)
             this.addThreeBalls()
+            this.selectedCell = null
+            this.clearSelection()
         }
     }
 
-    moveBall(cell) {
-        cell.setColor(this.changeColour)
-        const previousCell = this.grid.find(c => c.id === this.firstBoxClicked)
-        previousCell.clear()
+    moveBall(targetCell) {
+        targetCell.setColor(this.changeColour)
+        this.selectedCell.clear()
+    }
+
+    clearSelection() {
+        document.querySelectorAll("td.selected").forEach(td => td.classList.remove("selected"))
+        this.selectedCell = null
     }
 
     addThreeBalls() {
-        this.clearTdClick()
+        this.clearSelection()
         const threeBalls = this.getThreeRandomFreeCells()
         for (let j = 0; j < 3; j++) {
             const box = threeBalls[j]
@@ -117,17 +118,13 @@ class Game {
         })
     }
 
-    clearTdClick() {
-        const tds = document.querySelectorAll("table td")
-        tds.forEach(td => td.classList.remove("selected"))
-    }
-
     reset() {
         this.resetButton.addEventListener("click", () => {
             this.grid.forEach(cell => cell.clear())
             this.numberScore = 0
             this.score.value = "score : " + this.numberScore
             this.updateNumberOfBalls()
+            this.clearSelection()
         })
     }
 
@@ -143,11 +140,10 @@ class Game {
     }
 
     checkLine(cell) {
-        // Logique de vérification pour faire disparaître les boules
+        // Logique de vérification et gestion des lignes à implémenter ici
     }
 }
 
-// Initialisation du jeu
 const game = new Game(
     document.getElementById("gamegrid"),
     document.getElementById("numberBalls"),
