@@ -31,6 +31,7 @@ Slider est une reproduction d'un jeu de logique du site Goobix. Le but est de ma
 - Afficher le score (10 points par alignement réussi) = bug parfois ajoute +20 points
 
 ### Fonctionnalités à implémenter
+- Faire disparaître plus de 5 boules successives si elles se suivent de la même couleur
 - Prendre en compte les alignements obliques
 - Rendre le déplacement possible uniquement lorsqu'un chemin est disponible
 - Gérer les boules "joker"
