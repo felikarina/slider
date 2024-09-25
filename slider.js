@@ -132,6 +132,11 @@ class Game {
         let result = this.grid.filter(cell => !cell.isEmpty()).length
         this.numberBalls.value = "number of balls : " + result
     }
+    
+    updateScore() {
+        this.numberScore += 10
+        this.score.value = "score : " + this.numberScore
+    }
 
     addThreeBallsWithClick() {
         this.startButton.addEventListener("click", () => {
@@ -139,8 +144,62 @@ class Game {
         })
     }
 
+    following(cell, offset) {
+        const index = parseInt(cell.id) + offset
+        // if(index<1 || index>this.gridSize) {
+        //     return null
+        // }
+        return this.grid.find(c => c.id == index.toString()) || null
+    }
+
+    checkRight(cell) {
+        let nope = 0
+        let nextCell = this.following(cell, 1)
+        for (let m=0; m<4; m++) {
+            if(!nextCell) {
+                nope++
+                break
+            }
+            if(cell.color !== nextCell.color) {
+                nope++
+            }
+            nextCell = this.following(nextCell, 1)
+        }
+        return nope
+    }
+
+    disappear(cell) {
+        let nextCell = this.following(cell, 1)
+        cell.clear()
+        if(!this.grid.includes(cell)) {
+            this.grid.push(cell)
+        }
+        for(let n=0; n<4; n++) {
+            if(!this.grid.includes(nextCell)) {
+                this.grid.push(nextCell)
+            }
+            nextCell.clear()
+            nextCell = this.following(nextCell, 1)
+        }
+    }
+
     checkLine(cell) {
-        // Logique de vérification et gestion des lignes à implémenter ici
+        let firstCell = cell
+        let nope = this.checkRight(cell)
+
+        if (nope == 0 && !this.borderTable.includes(cell.id)) {
+            this.disappear(cell)
+        }
+
+        for (let p = 0; p<4; p++) {
+            cell = this.following(cell, -1)
+            if(!cell) break
+            nope = this.checkRight(cell)
+            if (nope == 0 && cell !== null && firstCell.color !== "picture/box.gif" && !this.borderTable.includes(cell.id)) {
+                this.disappear(cell)
+                this.updateScore()
+            }
+        }
     }
 }
 

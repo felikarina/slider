@@ -4,6 +4,7 @@ if(test.find((element) => element == 6)){
     console.log("true")
 }
 
+// FIRST VERSION CHECK WITH TABLE
 function checkLine1() {
     for (let l=0; l<tabLine.length; l++) {
         let images = tabLine[l].querySelectorAll("img")
@@ -28,8 +29,7 @@ function updateImageSources(elementsToUpdate){
 }
 
 
-//FIRST VERSION
-
+//FIRST VERSION WITHOUT POO
 let startButton = document.getElementById("start")
 let resetButton = document.getElementById("reset")
 let gameGrid = document.getElementById("gamegrid")
